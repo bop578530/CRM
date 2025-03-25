@@ -1,6 +1,5 @@
 # Flask CRM Application
 import atexit
-import webview
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
