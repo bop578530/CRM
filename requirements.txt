@@ -4,4 +4,4 @@ Flask-Login
 Flask-WTF
 WTForms
 email-validator
-flask_session
+flask-session
