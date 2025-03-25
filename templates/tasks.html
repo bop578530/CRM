@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}Task Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Task Manager</h2>
+    <a href="{{ url_for('create_task') }}" class="btn btn-primary">Create New Task</a>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Created By</th>
+                <th>Assigned To</th>
+                <th>Due Date</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.title }}</td>
+                <td>{{ task.creator.name }}</td>
+                <td>{{ task.assignee.name if task.assigned_to else 'Unassigned' }}</td>
+                <td>{{ task.due_date.strftime('%Y-%m-%d') }}</td>
+                <td><span class="badge badge-primary">{{ task.priority }}</span></td>
+                <td><span class="badge badge-success">{{ task.status }}</span></td>
+                <td>
+                    <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

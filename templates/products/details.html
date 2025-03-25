@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ product.name }} | CRM System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Product Details</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5>{{ product.name }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <p><strong>SKU:</strong> {{ product.sku or 'N/A' }}</p>
+                    <p><strong>Category:</strong> {{ product.category or 'N/A' }}</p>
+                    <p><strong>Price:</strong> ${{ "%.2f"|format(product.price) }}</p>
+                    <p><strong>Stock:</strong> {{ product.stock }} units</p>
+                    <p><strong>Added:</strong> {{ product.created_at.strftime('%Y-%m-%d') }}</p>
+                    
+                    {% if product.description %}
+                    <h4>Description</h4>
+                    <p>{{ product.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h3>${{ "%.2f"|format(product.price) }}</h3>
+                        <p>Current Price</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>{{ product.stock }}</h3>
+                        <p>Units in Stock</p>
+                    </div>
+                    
+                    <!-- You might add sales statistics here if you track them -->
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-warning">Edit Product</a>
+                <button type="button" class="btn btn-danger modal-trigger" data-modal="deleteProductModal">Delete Product</button>
+                <a href="{{ url_for('products_list') }}" class="btn btn-secondary">Back to Products</a>
+            </div>
+            
+            <div id="deleteProductModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3>Confirm Delete</h3>
+                    <p>Are you sure you want to delete the product "{{ product.name }}"?</p>
+                    <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}Offers{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Available Offers</h2>
+    <br>
+
+    <!-- Ongoing Offers -->
+    <div class="card">
+        <div class="card-header">Ongoing Offers</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Discount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offer in offers %}
+                    <tr>
+                        <td>{{ offer.category }}</td>
+                        <td>{{ offer.discount }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+    <!-- Customer-Based Offers -->
+    <div class="card">
+        <div class="card-header">Personalized Offers</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Category</th>
+                        <th>Discount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offer in customer_offers %}
+                    <tr>
+                        <td>{{ offer.customer_name }}</td>
+                        <td>{{ offer.customer_email }}</td>
+                        <td>{{ offer.category }}</td>
+                        <td>{{ offer.discount }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
