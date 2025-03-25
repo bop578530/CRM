@@ -7,3 +7,7 @@ email-validator
 flask-session
 gunicorn
 scikit-learn
+numpy
+pandas
+matplotlib
+shutil
