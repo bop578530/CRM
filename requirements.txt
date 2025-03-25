@@ -6,3 +6,4 @@ WTForms
 email-validator
 flask-session
 gunicorn
+scikit-learn
