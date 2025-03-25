@@ -13,15 +13,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///crm.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-'''
-app = Flask(__name__)
-app.secret_key = os.urandom(24) 
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_key_for_testing')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///crm.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False'''
-
-#yes
-# db = SQLAlchemy(app)
 
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_FILE_DIR"] = "./flask_session"
@@ -411,38 +402,6 @@ def new_sale():
 
 from sklearn.cluster import KMeans
 # Flask Route for Customer Segmentation
-'''@app.route('/customer-segmentation')
-@login_required
-def customer_segmentation():
-    # Fetch sales data
-    data = db.session.query(Sale.customer_id, db.func.sum(Sale.total_amount).label("total_spent"))\
-                     .group_by(Sale.customer_id).all()
-    
-    if not data:
-        return "No sales data available for segmentation."
-    
-    # Convert to DataFrame
-    df = pd.DataFrame(data, columns=["customer_id", "total_spent"])
-    
-    # Apply K-Means Clustering (3 segments)
-    kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
-    df["segment"] = kmeans.fit_predict(df[["total_spent"]])
-
-    # Map segments to human-readable labels
-    df["segment_label"] = df["segment"].map({0: "Low Spender", 1: "Medium Spender", 2: "High Spender"})
-
-    # Fetch customer names and emails
-    customers = Customer.query.filter(Customer.id.in_(df["customer_id"])).all()
-    customer_dict = {c.id: (c.first_name, c.email) for c in customers}
-    
-    # Add customer info to results
-    df["customer_name"] = df["customer_id"].map(lambda cid: customer_dict.get(cid, ("Unknown", ""))[0])
-    df["customer_email"] = df["customer_id"].map(lambda cid: customer_dict.get(cid, ("", ""))[1])
-
-    # Convert to dictionary for template
-    segmented_data = df.to_dict(orient="records")
-
-    return render_template("customer_segmentation.html", segmented_data=segmented_data)'''
 @app.route('/customer-segmentation')
 @login_required
 def customer_segmentation():
@@ -663,29 +622,6 @@ app.config['MAIL_PASSWORD'] = 'your_password'
 
 mail= Mail(app)
 
-'''@app.route('/offers')
-def offers():
-    user_id = session.get('user_id')
-    if not user_id:
-        flash("Please log in to view offers.", "warning")
-        return redirect(url_for('login'))
-    
-    customer = Customer.query.get(user_id)
-    if not customer:
-        flash("Customer not found.", "danger")
-        return redirect(url_for('dashboard'))
-    
-    # Get categories the customer has purchased from
-    customer_sales = Sale.query.filter_by(customer_id=customer.id).all()
-    purchased_categories = list(set(sale.category for sale in customer_sales))
-
-    # Get personalized offers
-    personalized_offers = Offer.query.filter(Offer.customer_id == customer.id, Offer.is_active == True).all()
-
-    # Get general offers based on the customer's purchase categories
-    category_offers = Offer.query.filter(Offer.category.in_(purchased_categories), Offer.customer_id == None, Offer.is_active == True).all()
-
-    return render_template('offers.html', customer=customer, personalized_offers=personalized_offers, category_offers=category_offers)'''
 
 @app.route('/offers')
 def show_offers():
@@ -812,23 +748,6 @@ def send_manual_offer():
 
     return redirect(url_for('offers'))
 
-'''
-@app.route('/predict_sales', methods=['GET'])
-def predict_sales():
-    sales_data = db.session.query(
-        SaleItem.product_id, 
-        db.func.sum(SaleItem.quantity).label('total_quantity')
-    ).group_by(SaleItem.product_id).all()
-
-    if not sales_data:
-        return jsonify({'error': 'No sales data available'})
-
-    df = pd.DataFrame(sales_data, columns=['product_id', 'total_quantity'])
-    df['future_sales'] = df['total_quantity'].apply(lambda x: x * np.random.uniform(1.1, 1.5))
-
-    predictions = df.to_dict(orient='records')
-    return jsonify(predictions)'''
-
 # Create tables and default admin user
 with app.app_context():
     db.create_all()
@@ -843,9 +762,6 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-from flask_migrate import Migrate
-migrate= Migrate(app,db)
 
 import sys
 if getattr(sys, 'frozen', False):
