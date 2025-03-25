@@ -12,3 +12,4 @@ pandas
 matplotlib
 shutil
 Werkzeug
+flask-mail
