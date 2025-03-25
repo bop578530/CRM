@@ -1,0 +1,76 @@
+
+<!-- templates/dashboard.html - Main dashboard page -->
+{% extends "layout.html" %}
+
+{% block title %}Dashboard - CRM System{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats-box">
+    <div class="stat-card">
+        <i class="fas fa-users" style="font-size: 2rem; color: var(--primary);"></i>
+        <h3>{{ customers_count }}</h3>
+        <p>Total Customers</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-star" style="font-size: 2rem; color: var(--warning);"></i>
+        <h3>{{ leads_count }}</h3>
+        <p>Leads</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-user-plus" style="font-size: 2rem; color: var(--primary);"></i>
+        <h3>{{ prospects_count }}</h3>
+        <p>Prospects</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-handshake" style="font-size: 2rem; color: var(--success);"></i>
+        <h3>{{ customers_active_count }}</h3>
+        <p>Active Customers</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Recent Interactions
+    </div>
+    <div class="card-body">
+        {% if interactions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Summary</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interaction in interactions %}
+                <tr>
+                    <td><a href="{{ url_for('view_customer', customer_id=interaction.customer_id) }}">{{ interaction.customer_name }}</a></td>
+                    <td>
+                        {% if interaction.type == 'call' %}
+                        <span class="badge badge-primary"><i class="fas fa-phone"></i> Call</span>
+                        {% elif interaction.type == 'email' %}
+                        <span class="badge badge-success"><i class="fas fa-envelope"></i> Email</span>
+                        {% elif interaction.type == 'meeting' %}
+                        <span class="badge badge-warning"><i class="fas fa-handshake"></i> Meeting</span>
+                        {% else %}
+                        <span class="badge badge-secondary">{{ interaction.type }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ interaction.summary }}</td>
+                    <td>{{ interaction.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><a href="{{ url_for('view_customer', customer_id=interaction.customer_id) }}" class="btn btn-sm btn-primary">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No recent interactions found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

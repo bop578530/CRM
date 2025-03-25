@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}Sale Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sale Details</h2>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Sale #{{ sale.id }}</h5>
+                        <span class="badge {% if sale.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                            {{ sale.status|title }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Customer:</strong> 
+                            {% if sale.customer %}
+                                {{ sale.customer.first_name }} {{ sale.customer.last_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Date:</strong> 
+                            {{ sale.sale_date.strftime('%B %d, %Y %I:%M %p') }}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Total Amount:</strong> 
+                            ${{ "%.2f"|format(sale.total_amount) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Items Purchased</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in sale.items %}
+                            <tr>
+                                <td>{{ item.product.name if item.product else 'Unknown Product' }}</td>
+                                <td>${{ "%.2f"|format(item.price_at_sale) }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="text-end">${{ "%.2f"|format(item.price_at_sale * item.quantity) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td class="text-end">${{ "%.2f"|format(sale.total_amount) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a href="{{ url_for('sales_list') }}" class="btn btn-secondary">Back to Sales List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

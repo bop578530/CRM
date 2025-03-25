@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4 text-center">Customer Segmentation Overview</h2>
+    <br>
+    <!-- Sales Data Table -->
+    <div class= card-header>Sales Summary</div>
+    <div class=" card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Total Customers</th>
+                <th>Total Sales</th>
+                <th>Best-Selling Product</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ total_customers if total_customers else 'No Data' }}</td>
+                <td>${{ total_sales if total_sales else 'No Data' }}</td>
+                <td>{{ best_selling_product_id if best_selling_product_id else 'No Data' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <!-- Customer Segmentation Table -->
+    <div class= card-header>Customer Segmentation</div>
+    <div class= card-body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>High Spenders</th>
+                <th>Medium Spenders</th>
+                <th>Low Spenders</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if high_spenders == 0 and medium_spenders == 0 and low_spenders == 0 %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No customer segmentation data found.</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ high_spenders }}</td>
+                <td>{{ medium_spenders }}</td>
+                <td>{{ low_spenders }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <!-- Sales Prediction Table -->
+    <div class= card-header>Sales Prediction</div>
+    <div class= card-body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Total Quantity Sold</th>
+                <th>Predicted Future Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if sales_data %}
+                {% for product in sales_data %}
+                <tr>
+                    <td>{{ product.product_id }}</td>
+                    <td>{{ product.total_quantity }}</td>
+                    <td>{{ product.future_sales | round(2) }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No sales data available.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <!-- Sales Prediction Graph -->
+    <h3>Sales Prediction Graph</h3>
+    <div class="text-center">
+        {% if graph_url %}
+            <img src="data:image/png;base64,{{ graph_url }}" alt="Sales Prediction Graph" class="img-fluid">
+        {% else %}
+            <p class="text-muted">No graph available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

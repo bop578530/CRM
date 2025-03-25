@@ -1,0 +1,1 @@
+pyinstaller --name crm_app --onefile --add-data "templates:templates" --add-data "static:static" app.py
